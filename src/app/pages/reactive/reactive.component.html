@@ -1,22 +1,30 @@
-<h4>Formularios <small> Reactivos </small></h4>
+<h4>Formularios <small>data</small></h4>
 <hr>
-<form autocomplete="off">
+<form autocomplete="off" [formGroup]="formulario" (ngSubmit)="guardarFormulario()">
 
     <div>
 
         <div class="form-group row">
             <label class="col-2 col-form-label">Nombre</label>
-            <div class="col-8">
+            <div class="col">
 
-                <input class="form-control" type="text" placeholder="Nombre">
+                <input class="form-control" type="text" placeholder="Nombre" formControlName="nombre" [class.is-invalid]="nombreNoValido">
+
+                <small *ngIf="nombreNoValido" class="text-danger">
+                  Ingrese 5 Letras
+                </small>
             </div>
         </div>
 
         <div class="form-group row">
             <label class="col-2 col-form-label">Apellido</label>
-            <div class="col-8">
+            <div class="col">
 
-                <input class="form-control" type="text" placeholder="Apellido">
+                <input class="form-control" type="text" placeholder="Apellido" formControlName="apellido" [class.is-invalid]="apellidoNoValido">
+
+                <small *ngIf="apellidoNoValido" class="text-danger">
+                  Ingrese 5 Letras
+                </small>
             </div>
         </div>
 
@@ -24,21 +32,110 @@
 
     <div class="form-group row">
         <label class="col-2 col-form-label">Correo</label>
-        <div class="col-8">
+        <div class="col">
 
-            <input class="form-control" type="email" placeholder="Correo electrónico">
+            <input class="form-control" type="email" placeholder="Correo electrónico" formControlName="email" [class.is-invalid]="emailNoValido">
+
+            <small *ngIf="emailNoValido" class="text-danger">
+              Correo Electronico Es Obligatorio
+            </small>
         </div>
     </div>
 
+    <div class="form-group row">
+        <label class="col-2 col-form-label">Contraseña</label>
+        <div class="col">
 
+            <input class="form-control" type="password" placeholder="Contraseña" formControlName="pass1" [class.is-invalid]="pass1NoValido">
+
+            <!-- <small *ngIf="emailNoValido" class="text-danger">
+              Correo Electronico Es Obligatorio
+            </small> -->
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-2 col-form-label">Repetir Contraseña</label>
+        <div class="col">
+
+            <input class="form-control" type="password" placeholder="Repetir Contraseña" formControlName="pass2" [class.is-invalid]="pass2NoValido">
+
+            <!-- <small *ngIf="emailNoValido" class="text-danger">
+              Correo Electronico Es Obligatorio
+            </small> -->
+        </div>
+    </div>
+
+    <!-- Debo Agrupar El Nuevo Objeto Dentro Del Objeto Existente -->
+    <div class="form-group row" formGroupName="direccion">
+        <label class="col-2 col-form-label">Dirección:</label>
+        <div class="form-row col">
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Departamento" formControlName="departamento" [class.is-invalid]="departamentoNoValido">
+
+                <small *ngIf="departamentoNoValido" class="text-danger">
+                  Ingresar Departamento
+                </small>
+            </div>
+
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Ciudad" formControlName="ciudad" [class.is-invalid]="ciudadNoValida">
+
+                <small *ngIf="ciudadNoValida" class="text-danger">
+                  Ingresar Ciudad
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debo Agrupar El Nuevo Array Dentro Del Objeto Existente -->
+    <div class="row">
+        <div class="col">
+
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Pasatiempo</th>
+                        <th>Borrar</th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="pasatiempos">
+                    <tr *ngFor="let pasatiempoControl of pasatiempos.controls; let i = index">
+                        <td>{{i + 1}}</td>
+                        <td>
+                            <input type="text" class="form-control" [formControlName]="i">
+                        </td>
+                        <td>
+                            <!-- Para Que No Haga El Submit Se Le Declara Type:"Button" -->
+                            <button (click)="borrarPasatiempo(i)" type="button" class="btn btn-danger">Borrar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Para Que No Haga El Submit Se Le Declara Type:"Button" -->
+            <button type="button" class="btn btn-outline-primary btn-block mt-5" (click)="agregarPasatiempo()">Agregar</button>
+        </div>
+    </div>
 
     <div class="form-group row">
         <label class="col-2 col-form-label">&nbsp;</label>
-        <div class="input-group col-md-8">
-            <button type="submit" class="btn btn-outline-primary btn-block">
+        <div class="input-group col">
+            <button type="submit" class="btn btn-primary btn-block">
         Guardar
       </button>
         </div>
     </div>
 
 </form>
+
+<hr>
+<pre>
+  Estado Del Formulario: {{ formulario.valid }}
+  <br>
+  Status: {{ formulario.status }}
+</pre>
+<pre>
+  {{ formulario.value | json }}
+</pre>

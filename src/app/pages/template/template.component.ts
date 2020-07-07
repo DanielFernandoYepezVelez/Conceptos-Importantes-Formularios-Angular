@@ -45,6 +45,6 @@ export class TemplateComponent implements OnInit {
       return;
     }
 
-    console.log(form);
+    // console.log(form);
   }
 }
