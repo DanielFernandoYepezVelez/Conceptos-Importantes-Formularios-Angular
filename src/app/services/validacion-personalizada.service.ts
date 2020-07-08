@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
+
+interface ErrorValidate {
+  [s: string]: boolean;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -7,8 +12,29 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class ValidacionPersonalizadaService {
   constructor() {}
 
+  /* Las Validaciones asincronas resuelven una promesa o un observable */
+  /* Validacion Asincrona(Simulación) */
+  existeUsuario(
+    control: FormControl
+  ): Promise<ErrorValidate> | Observable<ErrorValidate> {
+    if (!control.value) {
+      return Promise.resolve(null); /* No Resuelve Nada */
+    }
+
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (control.value === 'strider') {
+          resolve({ existe: true });
+        } else {
+          resolve(null); /* No Resuelve Nada */
+        }
+      }, 3500);
+    });
+  }
+
   /* LOS VALIDADORES SON FUNCIONES QUE RETORNAN UN ARREGLO */
-  noYepez(control: FormControl): { [s: string]: boolean } {
+  /* Esta es una validación Sincrona(Simulacion) */
+  noYepez(control: FormControl): ErrorValidate {
     if (control.value?.toLowerCase() === 'yepez') {
       return {
         noYepez: true,

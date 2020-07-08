@@ -42,6 +42,13 @@ export class ReactiveComponent implements OnInit {
     );
   }
 
+  get usuarioNoValido() {
+    return (
+      this.formulario.get('usuario').invalid &&
+      this.formulario.get('usuario').touched
+    );
+  }
+
   get pass1NoValido() {
     return (
       this.formulario.get('pass1').invalid &&
@@ -86,7 +93,7 @@ export class ReactiveComponent implements OnInit {
           [
             Validators.required,
             Validators.minLength(5),
-            this.validation.noYepez,
+            this.validation.noYepez /* Validación Sincrona */,
           ],
         ],
         email: [
@@ -96,6 +103,8 @@ export class ReactiveComponent implements OnInit {
             Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$'),
           ],
         ],
+        /* Aqui estoy aplicando una validación asincrona, y es personalizada */
+        usuario: ['', , this.validation.existeUsuario],
         pass1: ['', [Validators.required, Validators.minLength(3)]],
         pass2: ['', [Validators.required, Validators.minLength(3)]],
         direccion: this.formBuilder.group({
@@ -111,6 +120,24 @@ export class ReactiveComponent implements OnInit {
         validators: [this.validation.passwordsIguales('pass1', 'pass2')],
       }
     );
+  }
+
+  /* Me Puedo Suscribir al formulario Por Que Es Un Observable */
+  crearListeners() {
+    /* Para Escuchar Los cambios que sufra el Formularios si tenemos valores seteados */
+    this.formulario.valueChanges.subscribe((valor) => {
+      console.log(valor);
+    });
+
+    /* Aqui Me Suscribo Al Status Del Formulario, como por ejemplo si es valido o no es valido */
+    this.formulario.statusChanges.subscribe((status) => {
+      console.log(status);
+    });
+
+    /* Aqui me suscribo o estoy pendiente de un solo campo del formulario */
+    this.formulario.get('nombre').valueChanges.subscribe((valor) => {
+      console.log('Campo Valor =>', valor);
+    });
   }
 
   dataBackendParaFormularioFrontend() {
